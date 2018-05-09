@@ -1,4 +1,4 @@
-FROM openjdk:8 as builder
+FROM openjdk:8-slim as builder
 WORKDIR .
 
 ENV APP_HOME=/root/dev/app/
@@ -17,7 +17,7 @@ RUN ./mvnw package
 
 
 
-FROM openjdk:8 as app
+FROM openjdk:8-slim as app
 WORKDIR /root/
 COPY --from=builder /root/dev/app/target/demo-app*.jar .
 RUN mv demo-app*.jar demo-app.jar
