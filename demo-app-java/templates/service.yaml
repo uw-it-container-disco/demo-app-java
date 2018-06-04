@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "demo-app-java.fullname" . }}
+  labels:
+    app: {{ template "demo-app-java.name" . }}
+    chart: {{ template "demo-app-java.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "demo-app-java.name" . }}
+    release: {{ .Release.Name }}

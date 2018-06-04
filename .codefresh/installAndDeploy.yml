@@ -1,0 +1,85 @@
+version: '1.0'
+steps:
+
+   CheckVersions:
+    image: alpine/git:1.0.4
+    commands:
+    - export CHART_VERSION=$(cat demo-app-java/Chart.yaml | grep -m 1 ^version:| awk '{print $2}')
+    - export PUSH_HELM=$(if [[ "$(git log --format='%H' -n 1 -- demo-app-java/Chart.yaml)" == "${{CF_REVISION}}" ]]; then echo "true"; else echo "false"; fi)
+    - cf_export CHART_VERSION=$CHART_VERSION PUSH_HELM=$PUSH_HELM
+ 
+  BuildingDockerImage:
+    title: Building Docker Image
+    type: build
+    image_name: demo-app-java
+    working_directory: ./
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+    dockerfile: Dockerfile
+  PushingToDockerRegistry:
+    title: Pushing to Docker Registry
+    type: push
+    candidate: '${{BuildingDockerImage}}'
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+    registry: gcr
+
+  TestChart:
+    image: codefresh/cfstep-helm:2.9.1
+    commands:
+    - helm lint demo-app-java/
+
+  PackageChart:
+    image: codefresh/cfstep-helm:2.9.1
+    commands:
+    - helm package demo-app-java/
+    - cf_export CHART_PACKAGE=$(find . -name *.tgz)
+
+  PushChart:
+    image: codefresh/cfstep-helm:2.9.1
+    commands:
+    - helm repo add codefresh $CHART_REPO_URL
+    - helm push ${{CHART_PACKAGE}} codefresh
+    when:
+      condition:
+        all:
+          ChartYamlChanged: '"${{PUSH_HELM}}" == "true"'    
+  
+#  TriggerDeploy:
+#    image: codefresh/cli:latest
+#    commands:
+#    - export ARGS="-v CUSTOM_image_tag=${{CF_BRANCH_TAG_NORMALIZED}} -v CHART_VERSION=${{CHART_VERSION}}"
+#    - codefresh run $DEPLOY_STAGING_PIPELINE_ID --branch=master --detach $ARGS
+#    when:
+#      condition:
+#        all:
+#          AnythingPushed: '"${{TRIGGER_DEPLOY}}" == "true"'
+
+  DeployStaging:
+    image: codefresh/cfstep-helm:2.9.1
+    environment:
+    - CHART_VERSION=${{CHART_VERSION}}
+    - CUSTOM_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}
+    - ACTION=install
+    - CHART_REF=demo-app-java
+    - KUBE_CONTEXT=default
+  
+  # deploy:
+  #   image: codefresh/cfstep-helm:2.9.0
+  #   environment:
+  #   - CHART_REF=demo-app-java
+  #   - RELEASE_NAME=mychart-prod
+  #   - KUBE_CONTEXT=kube-prod
+
+  # RunningDeployScript:
+  #   title: Running Deploy Script
+  #   type: deploy
+  #   kind: kubernetes
+  #   cluster: dev-cop-cluster@test-kubernetes-maximede
+  #   namespace: default
+  #   when:
+  #     branch:
+  #       only:
+  #         - master
+  #   service: demo-app-java
+  #   candidate:
+  #     image: '${{BuildingDockerImage}}'
+  #     registry: gcr

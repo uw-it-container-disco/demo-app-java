@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-app-java
+  namespace: default
+    io.codefresh.generated-at: '1526425180991'
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: demo-app-java
+  type: LoadBalancer
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster

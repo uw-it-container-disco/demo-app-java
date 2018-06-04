@@ -23,3 +23,5 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+demo-app-java-*.tgz
