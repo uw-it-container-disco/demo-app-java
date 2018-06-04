@@ -34,7 +34,7 @@ public class HelloControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.param").value("container-disco"))
-                .andExpect(jsonPath("$.phrase").value("Hello container-disco"));
+                .andExpect(jsonPath("$.phrase").value("Hello container-disco !"));
     }
 
     @Test
@@ -44,6 +44,6 @@ public class HelloControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.param").value("toto"))
-                .andExpect(jsonPath("$.phrase").value("Hello toto"));
+                .andExpect(jsonPath("$.phrase").value("Hello toto !"));
     }
 }

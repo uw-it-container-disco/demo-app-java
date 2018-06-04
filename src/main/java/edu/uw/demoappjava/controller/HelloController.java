@@ -35,7 +35,7 @@ public class HelloController {
     }
 
     private String getHelloPhrase(String hello) {
-        return "Hello " + hello;
+        return "Hello " + hello + " !";
     }
 
 
