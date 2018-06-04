@@ -67,6 +67,7 @@ steps:
     - VALUE_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}
     - VALUE_image_repository=gcr.io/test-kubernetes-maximede/demo-app-java
     - VALUE_service_type=LoadBalancer
+    - VALUESFILE_deploy=demo-app-java/values_${{DEPLOY_KUBE_NS}}.yml
     - ACTION=install
     - CHART_REF=demo-app-java
     - KUBE_CONTEXT=dev-cop-cluster@test-kubernetes-maximede
