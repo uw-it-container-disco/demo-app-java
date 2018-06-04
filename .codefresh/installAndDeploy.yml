@@ -1,13 +1,19 @@
 version: '1.0'
 steps:
 
-   CheckVersions:
+  CheckVersions:
     image: alpine/git:1.0.4
     commands:
     - export CHART_VERSION=$(cat demo-app-java/Chart.yaml | grep -m 1 ^version:| awk '{print $2}')
     - export PUSH_HELM=$(if [[ "$(git log --format='%H' -n 1 -- demo-app-java/Chart.yaml)" == "${{CF_REVISION}}" ]]; then echo "true"; else echo "false"; fi)
-    - cf_export CHART_VERSION=$CHART_VERSION PUSH_HELM=$PUSH_HELM
+    - export DEPLOY_KUBE_NS=$(if [[ "master" == "${{CF_BRANCH_TAG_NORMALIZED}}" ]]; then echo "prod"; else echo "dev"; fi)
+    - cf_export CHART_VERSION=$CHART_VERSION PUSH_HELM=$PUSH_HELM DEPLOY_KUBE_NS=$DEPLOY_KUBE_NS
  
+  TestCode:
+    image: alpine/git:1.0.4
+    commands:
+    - echo "everything fine here, move along!"
+
   BuildingDockerImage:
     title: Building Docker Image
     type: build
@@ -15,6 +21,7 @@ steps:
     working_directory: ./
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
     dockerfile: Dockerfile
+  
   PushingToDockerRegistry:
     title: Pushing to Docker Registry
     type: push
@@ -53,14 +60,18 @@ steps:
 #        all:
 #          AnythingPushed: '"${{TRIGGER_DEPLOY}}" == "true"'
 
-  DeployStaging:
+  Deploy:
     image: codefresh/cfstep-helm:2.9.1
     environment:
     - CHART_VERSION=${{CHART_VERSION}}
-    - CUSTOM_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}
+    - VALUE_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}
+    - VALUE_image_repository=gcr.io/test-kubernetes-maximede/demo-app-java
+    - VALUESFILE_deploy=demo-app-java/values_${{DEPLOY_KUBE_NS}}.yml
     - ACTION=install
     - CHART_REF=demo-app-java
-    - KUBE_CONTEXT=default
+    - KUBE_CONTEXT=dev-cop-cluster@test-kubernetes-maximede
+    - NAMESPACE=${{DEPLOY_KUBE_NS}}
+    - RELEASE_NAME=demo-app-java-${{DEPLOY_KUBE_NS}}
   
   # deploy:
   #   image: codefresh/cfstep-helm:2.9.0
