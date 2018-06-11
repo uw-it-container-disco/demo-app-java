@@ -2,6 +2,7 @@ steps:
 - script: |
     echo hello world from $MyName
     echo Agent.HomeDirectory is $PWD
+    echo $(agent.os)
   workingDirectory: $(Agent.HomeDirectory)
   env:
     MyName: $(Agent.MachineName)
