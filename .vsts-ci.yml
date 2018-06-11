@@ -5,6 +5,7 @@ steps:
     echo Agent OS is $(agent.os)
     echo "##vso[task.setvariable variable=HostName]$MyName"
     echo "##vso[task.setvariable variable=CHART_VERSION]$(cat demo-app-java/Chart.yaml | grep -m 1 ^version:| awk '{print $2}')"
+    echo $(if [[ \"vsts\" == \"$BUILD_SOURCEBRANCHNAME\" ]]; then echo \"prod\"; else echo \"dev\"; fi)
     echo BranchName $BUILD_SOURCEBRANCHNAME
   workingDirectory: /opt/vsts/work/1/s
   env:
