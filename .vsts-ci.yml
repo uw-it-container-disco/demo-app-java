@@ -2,7 +2,7 @@ steps:
 - script: |
     echo hello world from $MyName
     echo Agent.HomeDirectory is $PWD
-    echo ls
+    ls
     echo Agent OS is $(agent.os)
     echo "##vso[task.setvariable variable=HostName]$MyName"
     export CHART_VERSION=$(cat demo-app-java/Chart.yaml | grep -m 1 ^version:| awk '{print $2}')
