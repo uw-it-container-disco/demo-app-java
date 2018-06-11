@@ -14,8 +14,7 @@ steps:
   displayName: Greeting from Linux
 
 - script: |
-    echo hello script 2
-    echo My name is $machineName
+    echo Every thing great, below are parameters
     echo chart version2 $CHART_VERSION
     echo push helm $PUSH_HELM
     echo deploy kube ns $DEPLOY_KUBE_NS
@@ -25,4 +24,12 @@ steps:
     PUSH_HELM: $(PUSH_HELM)
     DEPLOY_KUBE_NS: $(DEPLOY_KUBE_NS)
   condition: succeeded()
-  displayName: Second Build Step
+  displayName: Test the code
+
+- task: Docker@0
+  displayName:  'Build the Docker image'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    imageName: 'demo-app-java:$BUILD_SOURCEBRANCHNAME'
+    qualifyImageName: false
+    includeLatestTag: true
