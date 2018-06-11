@@ -12,7 +12,7 @@ steps:
 
 - script: |
     echo hello script 2
-    echo My name is $MyName
+    echo My name is $machineName
   workingDirectory: $(Agent.HomeDirectory)
   condition: succeeded()
   displayName: Second Build Step
