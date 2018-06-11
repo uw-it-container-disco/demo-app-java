@@ -2,11 +2,9 @@ steps:
 - script: |
     echo hello world from $MyName
     echo Agent.HomeDirectory is $PWD
-    ls
     echo Agent OS is $(agent.os)
     echo "##vso[task.setvariable variable=HostName]$MyName"
-    export CHART_VERSION=$(cat demo-app-java/Chart.yaml | grep -m 1 ^version:| awk '{print $2}')
-    echo chart version $CHART_VERSION
+    "##vso[task.setvariable variable=CHART_VERSION]$(cat demo-app-java/Chart.yaml | grep -m 1 ^version:| awk '{print $2}')"
   workingDirectory: /opt/vsts/work/1/s
   env:
     MyName: $(Agent.MachineName)
@@ -20,5 +18,6 @@ steps:
   workingDirectory: $(Agent.HomeDirectory)
   env:
     machineName: $(HostName)
+    CHART_VERSION: $(CHART_VERSION)
   condition: succeeded()
   displayName: Second Build Step
