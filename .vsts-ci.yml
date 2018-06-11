@@ -3,6 +3,7 @@ steps:
     echo hello world from $MyName
     echo Agent.HomeDirectory is $PWD
     echo Agent OS is $(agent.os)
+    echo "##vso[task.setvariable variable=machineName]$MyName"
   workingDirectory: $(Agent.HomeDirectory)
   env:
     MyName: $(Agent.MachineName)
