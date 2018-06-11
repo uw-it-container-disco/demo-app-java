@@ -7,7 +7,7 @@ steps:
     echo "##vso[task.setvariable variable=HostName]$MyName"
     export CHART_VERSION=$(cat demo-app-java/Chart.yaml | grep -m 1 ^version:| awk '{print $2}')
     echo chart version $CHART_VERSION
-  workingDirectory: $(Agent.HomeDirectory)
+  workingDirectory: /opt/vsts/work/1/s
   env:
     MyName: $(Agent.MachineName)
   condition: and(succeeded(), in(variables['agent.os'], 'darwin', 'linux'))
