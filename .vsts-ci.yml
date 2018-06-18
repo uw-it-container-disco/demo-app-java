@@ -76,7 +76,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Push Chart
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/demo-app-java$(CHART_VERSION).tgz'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/demo-app-java-$(CHART_VERSION).tgz'
     ArtifactName: 'Chart_Package'
   env:
     CHART_VERSION: $(CHART_VERSION)
