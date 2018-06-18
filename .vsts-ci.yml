@@ -34,3 +34,14 @@ steps:
     additionalImageTags: '$(Build.SourceBranchName)'
     qualifyImageName: false
     includeLatestTag: true
+
+- task: Docker@0
+  displayName: 'Push image to ACR'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryConnection: 'KubeDemoACR'
+    action: 'Push an image'
+    imageName: 'demo-app-java'
+    additionalImageTags: '$(Build.SourceBranchName)'
+    qualifyImageName: false
+    includeLatestTag: true
