@@ -30,7 +30,7 @@ steps:
   displayName:  'Build the Docker image'
   inputs:
     containerregistrytype: 'Container Registry'
-    imageName: 'demo-app-java'
+    imageName: 'kubedemoregistry.azurecr.io/demo-app-java'
     additionalImageTags: '$(Build.SourceBranchName)'
     qualifyImageName: false
     includeLatestTag: true
