@@ -28,24 +28,24 @@ steps:
   condition: succeeded()
   
 
-- task: Docker@0
-  displayName:  'Build the Docker image'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    imageName: 'kubedemoregistry.azurecr.io/demo-app-java'
-    additionalImageTags: '$(Build.SourceBranchName)'
-    qualifyImageName: false
-    includeLatestTag: true
+# - task: Docker@0
+#   displayName:  'Build the Docker image'
+#   inputs:
+#     containerregistrytype: 'Container Registry'
+#     imageName: 'kubedemoregistry.azurecr.io/demo-app-java'
+#     additionalImageTags: '$(Build.SourceBranchName)'
+#     qualifyImageName: false
+#     includeLatestTag: true
 
-- task: Docker@0
-  displayName: Push image to ACR
-  inputs:
-    azureSubscription: KubeDemoACR
-    azureContainerRegistry: '{"loginServer":"kubedemoregistry.azurecr.io", "id" : "/subscriptions/6cb7601e-7df4-4656-b033-756ff1bcc22a/resourceGroups/KubeDemo/providers/Microsoft.ContainerRegistry/registries/KubeDemoRegistry"}'
-    action: 'Push an image'
-    imageName: 'demo-app-java'
-    additionalImageTags: '$(Build.SourceBranchName)'
-    includeLatestTag: true
+# - task: Docker@0
+#   displayName: Push image to ACR
+#   inputs:
+#     azureSubscription: KubeDemoACR
+#     azureContainerRegistry: '{"loginServer":"kubedemoregistry.azurecr.io", "id" : "/subscriptions/6cb7601e-7df4-4656-b033-756ff1bcc22a/resourceGroups/KubeDemo/providers/Microsoft.ContainerRegistry/registries/KubeDemoRegistry"}'
+#     action: 'Push an image'
+#     imageName: 'demo-app-java'
+#     additionalImageTags: '$(Build.SourceBranchName)'
+#     includeLatestTag: true
 
 - task: HelmDeploy@0
   displayName: helm init
@@ -76,7 +76,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Push Chart
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/demo-app-java$CHART_VERSION.tgz'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/demo-app-java$(CHART_VERSION).tgz'
     ArtifactName: 'Chart_Package'
   env:
     CHART_VERSION: $(CHART_VERSION)
