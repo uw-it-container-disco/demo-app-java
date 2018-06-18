@@ -36,12 +36,11 @@ steps:
     includeLatestTag: true
 
 - task: Docker@0
-  displayName: 'Push image to ACR'
+  displayName: Push image to ACR
   inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryConnection: 'KubeDemoACR'
+    azureSubscription: KubeDemoACR
+    azureContainerRegistry: '{"loginServer":"kubedemoregistry.azurecr.io", "id" : "/subscriptions/6cb7601e-7df4-4656-b033-756ff1bcc22a/resourceGroups/KubeDemo/providers/Microsoft.ContainerRegistry/registries/KubeDemoRegistry"}'
     action: 'Push an image'
     imageName: 'demo-app-java'
     additionalImageTags: '$(Build.SourceBranchName)'
-    qualifyImageName: false
     includeLatestTag: true
