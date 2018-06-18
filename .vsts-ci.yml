@@ -92,4 +92,4 @@ steps:
     chartName: 'demo-app-java-$(CHART_VERSION).yml'
     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
     valueFile: 'values_$(DEPLOY_KUBE_NS).yml'
-  condition: and(succeeded(), eq(variables['PUSH_HELM'],'true')
+  condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
