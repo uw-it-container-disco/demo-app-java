@@ -55,6 +55,7 @@ steps:
     command: init
     upgradeTiller: false
     arguments: '--client-only'
+  condition: succeeded()
 
 - task: HelmDeploy@0
   displayName: helm lint
@@ -63,6 +64,7 @@ steps:
     kubernetesServiceConnection: 'ACS Kubernetes'
     command: lint
     arguments: 'demo-app-java/'
+  condition: succeeded()
 
 - task: HelmDeploy@0
   displayName: Package Helm chart
@@ -72,6 +74,7 @@ steps:
     command: package
     chartPath: 'demo-app-java'
     save: false
+  condition: succeeded()
 
 - task: PublishBuildArtifacts@1
   displayName: Push Chart
@@ -81,6 +84,7 @@ steps:
   env:
     CHART_VERSION: $(CHART_VERSION)
     PUSH_HELM: $(PUSH_HELM)
+  condition: succeeded()
 
 - task: HelmDeploy@0
   displayName: Helm Deploy Chart
@@ -92,4 +96,5 @@ steps:
     chartName: 'demo-app-java'
     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
     valueFile: 'values_$(DEPLOY_KUBE_NS).yml'
-  condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
+  condition: succeeded()
+  # condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
