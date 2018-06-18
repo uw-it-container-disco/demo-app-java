@@ -1,4 +1,5 @@
 steps:
+
 - script: |
     echo hello world from $MyName
     echo Agent.HomeDirectory is $PWD
@@ -7,24 +8,25 @@ steps:
     echo "##vso[task.setvariable variable=PUSH_HELM]$(if [[ \"$(git log --format='%H' -n 1 -- demo-app-java/Chart.yaml)\" == \"$BUILD_SOURCEVERSION\" ]]; then echo \"true\"; else echo \"false\"; fi)"
     echo "##vso[task.setvariable variable=DEPLOY_KUBE_NS]$(if [[ \"vsts\" == \"$BUILD_SOURCEBRANCHNAME\" ]]; then echo \"prod\"; else echo \"dev\"; fi)"
     echo source version $BUILD_SOURCEVERSION
+  displayName: Greeting from Linux
   workingDirectory: /opt/vsts/work/1/s
   env:
     MyName: $(Agent.MachineName)
   condition: and(succeeded(), in(variables['agent.os'], 'darwin', 'linux'))
-  displayName: Greeting from Linux
 
 - script: |
     echo Every thing great, below are parameters
     echo chart version2 $CHART_VERSION
     echo push helm $PUSH_HELM
     echo deploy kube ns $DEPLOY_KUBE_NS
+  displayName: Test the code
   workingDirectory: $(Agent.HomeDirectory)
   env:
     CHART_VERSION: $(CHART_VERSION)
     PUSH_HELM: $(PUSH_HELM)
     DEPLOY_KUBE_NS: $(DEPLOY_KUBE_NS)
   condition: succeeded()
-  displayName: Test the code
+  
 
 - task: Docker@0
   displayName:  'Build the Docker image'
@@ -44,6 +46,15 @@ steps:
     imageName: 'demo-app-java'
     additionalImageTags: '$(Build.SourceBranchName)'
     includeLatestTag: true
+
+- task: HelmDeploy@0
+  displayName: helm init
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceConnection: 'ACS Kubernetes'
+    command: init
+    upgradeTiller: false
+    arguments: '--client-only'
 
 - task: HelmDeploy@0
   displayName: helm lint
