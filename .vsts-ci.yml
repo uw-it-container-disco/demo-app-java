@@ -51,7 +51,7 @@ steps:
   displayName: helm init
   inputs:
     connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceConnection: 'ACS Kubernetes'
+    kubernetesServiceConnection: KubeDemoAKS
     command: init
     upgradeTiller: false
   condition: succeeded()
@@ -60,7 +60,7 @@ steps:
   displayName: helm lint
   inputs:
     connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceConnection: 'ACS Kubernetes'
+    kubernetesServiceConnection: KubeDemoAKS
     command: lint
     arguments: 'demo-app-java/'
   condition: succeeded()
@@ -69,7 +69,7 @@ steps:
   displayName: Package Helm chart
   inputs:
     connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceConnection: 'ACS Kubernetes'
+    kubernetesServiceConnection: KubeDemoAKS
     command: package
     chartPath: 'demo-app-java'
     save: false
