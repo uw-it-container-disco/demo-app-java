@@ -19,6 +19,7 @@ steps:
     echo chart version2 $CHART_VERSION
     echo push helm $PUSH_HELM
     echo deploy kube ns $DEPLOY_KUBE_NS
+    echo $PATH
   displayName: Test the code
   workingDirectory: $(Agent.HomeDirectory)
   env:
