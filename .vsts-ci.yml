@@ -54,7 +54,6 @@ steps:
     kubernetesServiceConnection: 'ACS Kubernetes'
     command: init
     upgradeTiller: false
-    arguments: '--client-only'
   condition: succeeded()
 
 - task: HelmDeploy@0
