@@ -19,6 +19,12 @@ public class HelloController {
     public HelloDTO hello() {
         return getHello();
     }
+    
+    @RequestMapping("/hello2")
+    @ResponseBody
+    public HelloDTO hello() {
+        return getHello();
+    }
 
     @RequestMapping("/hello/{hello}")
     @ResponseBody
