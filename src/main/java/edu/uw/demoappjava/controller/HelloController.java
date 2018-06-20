@@ -22,7 +22,7 @@ public class HelloController {
     
     @RequestMapping("/hello2")
     @ResponseBody
-    public HelloDTO hello() {
+    public HelloDTO hello2() {
         return getHello();
     }
 
