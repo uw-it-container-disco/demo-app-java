@@ -20,34 +20,34 @@ steps:
     echo chart version2 $CHART_VERSION
     echo push helm $PUSH_HELM
     echo deploy kube ns $DEPLOY_KUBE_NS
-    echo $PATH
+    echo deploy branch $BRANCHNAME
   displayName: Test the code
   workingDirectory: $(Agent.HomeDirectory)
   env:
     CHART_VERSION: $(CHART_VERSION)
     PUSH_HELM: $(PUSH_HELM)
     DEPLOY_KUBE_NS: $(DEPLOY_KUBE_NS)
+    BRANCHNAME: $(BRANCHNAME)
   condition: succeeded()
   
+- task: Docker@0
+  displayName:  'Build the Docker image'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    imageName: 'kubedemoregistry.azurecr.io/demo-app-java'
+    additionalImageTags: '$(Build.SourceBranchName)'
+    qualifyImageName: false
+    includeLatestTag: true
 
-# - task: Docker@0
-#   displayName:  'Build the Docker image'
-#   inputs:
-#     containerregistrytype: 'Container Registry'
-#     imageName: 'kubedemoregistry.azurecr.io/demo-app-java'
-#     additionalImageTags: '$(Build.SourceBranchName)'
-#     qualifyImageName: false
-#     includeLatestTag: true
-
-# - task: Docker@0
-#   displayName: Push image to ACR
-#   inputs:
-#     azureSubscription: KubeDemoACR
-#     azureContainerRegistry: '{"loginServer":"kubedemoregistry.azurecr.io", "id" : "/subscriptions/6cb7601e-7df4-4656-b033-756ff1bcc22a/resourceGroups/KubeDemo/providers/Microsoft.ContainerRegistry/registries/KubeDemoRegistry"}'
-#     action: 'Push an image'
-#     imageName: 'demo-app-java'
-#     additionalImageTags: '$(Build.SourceBranchName)'
-#     includeLatestTag: true
+- task: Docker@0
+  displayName: Push image to ACR
+  inputs:
+    azureSubscription: KubeDemoACR
+    azureContainerRegistry: '{"loginServer":"kubedemoregistry.azurecr.io", "id" : "/subscriptions/6cb7601e-7df4-4656-b033-756ff1bcc22a/resourceGroups/KubeDemo/providers/Microsoft.ContainerRegistry/registries/KubeDemoRegistry"}'
+    action: 'Push an image'
+    imageName: 'demo-app-java'
+    additionalImageTags: '$(Build.SourceBranchName)'
+    includeLatestTag: true
 
 - task: HelmDeploy@0
   displayName: helm init
@@ -87,39 +87,34 @@ steps:
     PUSH_HELM: $(PUSH_HELM)
   condition: succeeded()
 
+# - task: HelmDeploy@0
+#   displayName: Helm Deploy Chart
+#   inputs:
+#     connectionType: 'Kubernetes Service Connection'
+#     kubernetesServiceConnection: KubeDemoAKS
+#     namespace: $(DEPLOY_KUBE_NS)
+#     command: install
+#     chartName: 'demo-app-java'
+#     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
+#     overrideValues: 'image.tag=$(BRANCHNAME),image.repository=kubedemoregistry.azurecr.io/demo-app-java'
+#     valueFile: 'demo-app-java/values_$(DEPLOY_KUBE_NS).yml'
+#   env:
+#     BRANCHNAME: $(BRANCHNAME)
+#     DEPLOY_KUBE_NS: $(DEPLOY_KUBE_NS)
+#   # condition: succeeded()
+#   # condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
+
 - task: HelmDeploy@0
-  displayName: Helm Deploy Chart
+  displayName: Deploy
   inputs:
     connectionType: 'Kubernetes Service Connection'
     kubernetesServiceConnection: KubeDemoAKS
     namespace: $(DEPLOY_KUBE_NS)
-    command: install
+    command: upgrade
     chartName: 'demo-app-java'
     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
     overrideValues: 'image.tag=$(BRANCHNAME),image.repository=kubedemoregistry.azurecr.io/demo-app-java'
-    valueFile: 'demo-app-java/values_$(DEPLOY_KUBE_NS).yml'
+    valueFile: 'demo-app-java/values_prod.yml'
   env:
     BRANCHNAME: $(BRANCHNAME)
     DEPLOY_KUBE_NS: $(DEPLOY_KUBE_NS)
-  # condition: succeeded()
-  # condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
-
-# - task: HelmDeploy@0
-#   displayName: Helm Delete Chart
-#   inputs:
-#     connectionType: 'Kubernetes Service Connection'
-#     kubernetesServiceConnection: KubeDemoAKS
-#     namespace: $(DEPLOY_KUBE_NS)
-#     command: delete
-
-# - task: HelmDeploy@0
-#   displayName: Deploy
-#   inputs:
-#     connectionType: 'Kubernetes Service Connection'
-#     kubernetesServiceConnection: KubeDemoAKS
-#     namespace: $(DEPLOY_KUBE_NS)
-#     command: upgrade
-#     chartName: 'demo-app-java'
-#     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
-#     overrideValues: 'image_tag=$(BUILD_SOURCEBRANCHNAME),image_repository=kubedemoregistry.azurecr.io/demo-app-java'
-#     valueFile: 'demo-app-java/values_prod.yml'
