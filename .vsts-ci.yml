@@ -96,10 +96,10 @@ steps:
     command: install
     chartName: 'demo-app-java'
     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
-    overrideValues: 'image.tag=$(BUILD_SOURCEBRANCHNAME),image.repository=kubedemoregistry.azurecr.io/demo-app-java'
+    overrideValues: 'image.tag=$(BRANCHNAME),image.repository=kubedemoregistry.azurecr.io/demo-app-java'
     valueFile: 'demo-app-java/values_$(DEPLOY_KUBE_NS).yml'
   env:
-    BUILD_SOURCEBRANCHNAME: $(BUILD_SOURCEBRANCHNAME)
+    BRANCHNAME: $(BRANCHNAME)
     DEPLOY_KUBE_NS: $(DEPLOY_KUBE_NS)
   # condition: succeeded()
   # condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
