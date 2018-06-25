@@ -86,19 +86,19 @@ steps:
     PUSH_HELM: $(PUSH_HELM)
   condition: succeeded()
 
-# - task: HelmDeploy@0
-#   displayName: Helm Deploy Chart
-#   inputs:
-#     connectionType: 'Kubernetes Service Connection'
-#     kubernetesServiceConnection: KubeDemoAKS
-#     namespace: $(DEPLOY_KUBE_NS)
-#     command: install
-#     chartName: 'demo-app-java'
-#     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
-#     overrideValues: 'image_tag=$(BUILD_SOURCEBRANCHNAME),image_repository=kubedemoregistry.azurecr.io/demo-app-java'
-#     valueFile: 'demo-app-java/values_$(DEPLOY_KUBE_NS).yml'
-#   # condition: succeeded()
-#   # condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
+- task: HelmDeploy@0
+  displayName: Helm Deploy Chart
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceConnection: KubeDemoAKS
+    namespace: $(DEPLOY_KUBE_NS)
+    command: install
+    chartName: 'demo-app-java'
+    releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
+    overrideValues: 'image_tag=$(BUILD_SOURCEBRANCHNAME),image_repository=kubedemoregistry.azurecr.io/demo-app-java'
+    valueFile: 'demo-app-java/values_$(DEPLOY_KUBE_NS).yml'
+  # condition: succeeded()
+  # condition: and(succeeded(), eq(variables['PUSH_HELM'],'true'))
 
 # - task: HelmDeploy@0
 #   displayName: Helm Delete Chart
@@ -108,14 +108,14 @@ steps:
 #     namespace: $(DEPLOY_KUBE_NS)
 #     command: delete
 
-- task: HelmDeploy@0
-  displayName: Deploy
-  inputs:
-    connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceConnection: KubeDemoAKS
-    namespace: $(DEPLOY_KUBE_NS)
-    command: upgrade
-    chartName: 'demo-app-java'
-    releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
-    overrideValues: 'image_tag=$(BUILD_SOURCEBRANCHNAME),image_repository=kubedemoregistry.azurecr.io/demo-app-java'
-    valueFile: 'demo-app-java/values_prod.yml'
+# - task: HelmDeploy@0
+#   displayName: Deploy
+#   inputs:
+#     connectionType: 'Kubernetes Service Connection'
+#     kubernetesServiceConnection: KubeDemoAKS
+#     namespace: $(DEPLOY_KUBE_NS)
+#     command: upgrade
+#     chartName: 'demo-app-java'
+#     releaseName: 'demo-app-java-$(DEPLOY_KUBE_NS)'
+#     overrideValues: 'image_tag=$(BUILD_SOURCEBRANCHNAME),image_repository=kubedemoregistry.azurecr.io/demo-app-java'
+#     valueFile: 'demo-app-java/values_prod.yml'
