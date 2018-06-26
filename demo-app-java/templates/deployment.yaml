@@ -44,10 +44,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: K8S_REPLICA_COUNT
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.replica
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
