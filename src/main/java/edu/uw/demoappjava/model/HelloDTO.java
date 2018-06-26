@@ -13,6 +13,8 @@ public class HelloDTO {
 
     private String phrase;
     private String param;
+    private String podName;
+    private String nodeName;
 
 
 }

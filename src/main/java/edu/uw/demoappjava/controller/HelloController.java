@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.uw.demoappjava.model.HelloDTO;
 
 /**
- * @author Maxime Deravet
- * Date: 5/1/18
+ * @author Maxime Deravet Date: 5/1/18
  */
 @Controller
 public class HelloController {
@@ -19,7 +18,7 @@ public class HelloController {
     public HelloDTO hello() {
         return getHello();
     }
-    
+
     @RequestMapping("/hello2")
     @ResponseBody
     public HelloDTO hello2() {
@@ -37,7 +36,13 @@ public class HelloController {
     }
 
     private HelloDTO getHello(String hello) {
-        return HelloDTO.builder().phrase(getHelloPhrase(hello)).param(hello).build();
+
+        return HelloDTO.builder()
+                .phrase(getHelloPhrase(hello))
+                .param(hello)
+                .nodeName(System.getenv("K8S_NODE_NAME"))
+                .podName(System.getenv("K8S_POD_NAME"))
+                .build();
     }
 
     private String getHelloPhrase(String hello) {
