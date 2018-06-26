@@ -16,5 +16,4 @@ public class HelloDTO {
     private String podName;
     private String nodeName;
 
-
 }
