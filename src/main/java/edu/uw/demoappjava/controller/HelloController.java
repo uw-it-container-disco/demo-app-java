@@ -42,7 +42,6 @@ public class HelloController {
                 .param(hello)
                 .nodeName(System.getenv("K8S_NODE_NAME"))
                 .podName(System.getenv("K8S_POD_NAME"))
-                .replicaCount(System.getenv("K8S_REPLICA_COUNT"))
                 .build();
     }
 
