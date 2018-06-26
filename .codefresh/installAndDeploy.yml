@@ -69,7 +69,7 @@ steps:
     - VALUESFILE_deploy=demo-app-java/values_${{DEPLOY_KUBE_NS}}.yml
     - ACTION=install
     - CHART_REF=demo-app-java
-    - KUBE_CONTEXT=dev-cop-cluster@test-kubernetes-maximede
+    - KUBE_CONTEXT=container-disco-demo@test-kubernetes-maximede
     - NAMESPACE=${{DEPLOY_KUBE_NS}}
     - RELEASE_NAME=demo-app-java-${{DEPLOY_KUBE_NS}}
   
@@ -84,7 +84,7 @@ steps:
   #   title: Running Deploy Script
   #   type: deploy
   #   kind: kubernetes
-  #   cluster: dev-cop-cluster@test-kubernetes-maximede
+  #   cluster: container-disco-demo@test-kubernetes-maximede
   #   namespace: default
   #   when:
   #     branch:
