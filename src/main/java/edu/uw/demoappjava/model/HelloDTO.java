@@ -15,6 +15,7 @@ public class HelloDTO {
     private String param;
     private String podName;
     private String nodeName;
+    private String replicaCount;
 
 
 }
