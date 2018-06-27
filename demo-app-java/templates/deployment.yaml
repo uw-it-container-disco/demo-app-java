@@ -36,6 +36,11 @@ spec:
               path: /hello
               port: http
           env:
+            - name: SPRING_SECURITY_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: spring-security
+                  key: SPRING_SECURITY_USER_PASSWORD
             - name: K8S_NODE_NAME
               valueFrom:
                 fieldRef:
