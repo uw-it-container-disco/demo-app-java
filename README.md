@@ -9,8 +9,24 @@
 
 
 ## Build : 
-`docker build -t uwitcontainerdisco/demo-app-java .`
+`docker build -t demo-app-java .`
 
 
-## Run:
-`docker run -it --rm -p 8080:8080 uwitcontainerdisco/demo-app-java`
+## Run without k8s:
+`docker run -it --rm -p 8080:8080 demo-app-java`
+
+# Deploy to a k8s cluster
+
+You'll need the helm cli installed on your machine and tiller deployed on your k8s cluster (https://docs.helm.sh/using_helm/#quickstart)
+
+( If using Docker for mac or minikube, Set the `--image-pull-policy` flag to `Never` to always use the local image, rather than pulling it from your Docker registry)
+
+* You'll first need to build the docker image `docker build -t demo-app-java .`
+* Then add the required spring secret : `kubectl create secret generic spring-security --from-literal=SPRING_SECURITY_USER_PASSWORD="pwd" `
+* run `helm install --set service.type=NodePort --set image.pullPolicy=Never ./demo-app-java -n demo-app-java`
+* find the port that has been assigned to the app by running `kubectl get svc`
+* open a browser to http://localhost:$NODEPORT/hello
+
+You can update the number of running pods by executing `kubectl scale --replicas=3 deployment/demo-app-java` or `helm upgrade demo-app-java --set replicaCount=5 --set service.type=NodePort --set image.pullPolicy=Never demo-app-java`
+
+* purge the helm deployment by running `helm del --purge demo-app-java`
