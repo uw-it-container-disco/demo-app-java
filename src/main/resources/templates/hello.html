@@ -18,7 +18,9 @@
 
     <h3 th:text="${hello.phrase}"></h3>
     <h4 th:if="${hello.podName !=null}"
-        th:text="'from '+ ${hello.podName} + ' on ' +${hello.nodeName} "></h4>
+        th:text="'from '+ ${hello.podName} "></h4>
+    <h4 th:if="${hello.nodeName !=null}"
+        th:text="'on ' +${hello.nodeName} "></h4>
 </div>
 
 </body>
