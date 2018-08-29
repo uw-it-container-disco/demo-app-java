@@ -1,4 +1,4 @@
-FROM openjdk:8-slim as builder
+FROM openjdk:10-slim as builder
 WORKDIR .
 
 ENV APP_HOME=/root/dev/app/
@@ -17,7 +17,7 @@ RUN ./mvnw package
 
 
 
-FROM openjdk:8-slim as app
+FROM openjdk:10-slim as app
 WORKDIR /root/
 COPY --from=builder /root/dev/app/target/demo-app*.jar .
 RUN mv demo-app*.jar demo-app.jar
@@ -26,4 +26,4 @@ EXPOSE 8080
 HEALTHCHECK --start-period=5s --timeout=3s --interval=15s \
     CMD curl http://localhost:8080/actuator/health || exit 1
 
-CMD ["java","-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar", "demo-app.jar"]
+CMD ["java","-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap","-XX:MaxRAMFraction=1" ,"-Xms64M", "-Djava.security.egd=file:/dev/./urandom","-jar", "demo-app.jar"]
