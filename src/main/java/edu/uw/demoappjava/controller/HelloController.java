@@ -1,9 +1,9 @@
 package edu.uw.demoappjava.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.uw.demoappjava.model.HelloDTO;
 
@@ -13,40 +13,42 @@ import edu.uw.demoappjava.model.HelloDTO;
 @Controller
 public class HelloController {
 
-    @RequestMapping("/hello")
-    @ResponseBody
-    public HelloDTO hello() {
-        return getHello();
+    @GetMapping("/hello")
+    public String hello(Model model) {
+        addHelloToModel(model);
+        return "hello";
     }
 
-    @RequestMapping("/hello2")
-    @ResponseBody
-    public HelloDTO hello2() {
-        return getHello();
+    @GetMapping("/hello2")
+    public String hello2(Model model) {
+        addHelloToModel(model);
+        return "hello";
     }
 
-    @RequestMapping("/hello/{hello}")
-    @ResponseBody
-    public HelloDTO helloWord(@PathVariable("hello") String hello) {
-        return getHello(hello);
+    @GetMapping("/hello/{hello}")
+    public String helloWord(@PathVariable("hello") String hello, Model model) {
+        addHelloToModel(model, hello);
+        return "hello";
     }
 
-    private HelloDTO getHello() {
-        return getHello("container-disco");
+    private void addHelloToModel(Model model) {
+        addHelloToModel(model, "container-disco");
     }
 
-    private HelloDTO getHello(String hello) {
+    private void addHelloToModel(Model model, String hello) {
 
-        return HelloDTO.builder()
+        HelloDTO helloDTO = HelloDTO.builder()
                 .phrase(getHelloPhrase(hello))
                 .param(hello)
                 .nodeName(System.getenv("K8S_NODE_NAME"))
                 .podName(System.getenv("K8S_POD_NAME"))
                 .build();
+
+        model.addAttribute("hello", helloDTO);
     }
 
     private String getHelloPhrase(String hello) {
-        return "Hello " + hello + "!!!!  yea it's going";
+        return "Hello " + hello + "!";
     }
 
 
