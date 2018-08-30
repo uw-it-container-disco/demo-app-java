@@ -30,3 +30,7 @@ You'll need the helm cli installed on your machine and tiller deployed on your k
 You can update the number of running pods by executing `kubectl scale --replicas=3 deployment/demo-app-java` or `helm upgrade demo-app-java --set replicaCount=5 --set service.type=NodePort --set image.pullPolicy=Never demo-app-java`
 
 * purge the helm deployment by running `helm del --purge demo-app-java`
+
+# CI Pipeline
+
+![Pipeline flowchart](/docs/ci_pipeline_flowchart.png)
