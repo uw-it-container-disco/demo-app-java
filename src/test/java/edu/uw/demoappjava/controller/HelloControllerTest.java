@@ -1,5 +1,6 @@
 package edu.uw.demoappjava.controller;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,8 @@ public class HelloControllerTest {
 
         this.mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.param").isNotEmpty())
-                .andExpect(jsonPath("$.phrase").isNotEmpty());
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(content().string(Matchers.containsString("Hello container-disco!")));
     }
 
     @Test
@@ -42,8 +42,8 @@ public class HelloControllerTest {
 
         this.mockMvc.perform(get("/hello/toto"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.param").isNotEmpty())
-                .andExpect(jsonPath("$.phrase").isNotEmpty());
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(content().string(Matchers.containsString("Hello toto!")));
+
     }
 }
