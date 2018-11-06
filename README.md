@@ -31,6 +31,8 @@ You can update the number of running pods by executing `kubectl scale --replicas
 
 * purge the helm deployment by running `helm del --purge demo-app-java`
 
+* testing!!!
+
 # CI Pipeline
 
 ![Pipeline flowchart](/docs/ci_pipeline_flowchart.png)
